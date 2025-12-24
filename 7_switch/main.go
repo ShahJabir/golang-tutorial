@@ -25,7 +25,7 @@ func main() {
 	default:
 		fmt.Println("Grade: F")
 	}
-	whoamI := func(i interface{}){
+	whoamI := func(i interface{}) {
 		switch v := i.(type) {
 		case int:
 			fmt.Printf("I am an integer: %d\n", v)
@@ -36,7 +36,7 @@ func main() {
 		case bool:
 			fmt.Printf("I am a boolean: %t\n", v)
 		default:
-			fmt.Printf("I am of a different type: %T\n", v)
+			fmt.Printf("I am of a different type ${}: %T\n", v)
 		}
 	}
 	whoamI(42)
