@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 )
 
 func fileInfo(filePath string) os.FileInfo {
@@ -125,6 +126,7 @@ func main() {
 	fmt.Println("File copied successfully using buffered I/O")
 
 	// Remove File
+	time.Sleep(time.Second)
 	removeFile("streamFile.txt")
 	removeFile("newFile.txt")
 }
