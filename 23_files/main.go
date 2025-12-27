@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 )
@@ -46,7 +47,7 @@ func readFile(filePath string) []byte {
 	return data
 }
 
-func createFile(filePath string, data []byte) {
+func writeFile(filePath string, data []byte) {
 	f, err := os.Create(filePath)
 	if err != nil {
 		panic(err)
@@ -56,6 +57,14 @@ func createFile(filePath string, data []byte) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func removeFile(filePath string) {
+	err := os.Remove(filePath)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(filePath, "Deleted successfully")
 }
 
 func main() {
@@ -77,7 +86,45 @@ func main() {
 		fmt.Println(fileInfo.Name())
 	}
 
-	// Create a new file
-	createFile("./newfile.txt", []byte("Hello, World!"))
-	fmt.Println("New file created: newfile.txt")
+	// Write in file
+	writeFile("newFile.txt", []byte("Hello, World!"))
+
+	// Stream file reading using bufio and then writing to another file
+	SourceFile, err := os.Open("./example.txt")
+	if err != nil {
+		panic(err)
+	}
+	// defer SourceFile.Close()
+
+	DestFile, err := os.Create("./streamFile.txt")
+	if err != nil {
+		panic(err)
+	}
+	// defer DestFile.Close()
+
+	reader := bufio.NewReader(SourceFile)
+	writer := bufio.NewWriter(DestFile)
+
+	for {
+		n, err := reader.ReadByte()
+		if err != nil {
+			if err.Error() != "EOF" {
+				panic(err)
+			}
+			break
+		}
+		WriteErr := writer.WriteByte(n)
+		if WriteErr != nil {
+			panic(WriteErr)
+		}
+	}
+	writer.Flush()
+	DestFile.Close()
+	SourceFile.Close()
+
+	fmt.Println("File copied successfully using buffered I/O")
+
+	// Remove File
+	removeFile("streamFile.txt")
+	removeFile("newFile.txt")
 }
